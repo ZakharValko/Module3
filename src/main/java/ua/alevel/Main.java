@@ -29,12 +29,7 @@ public class Main {
         like1.setUser(user1);
         like1.setPhoto(photo1);
 
-        // Получаем юзера из лайка
-        likeDao.setLike(like1);
-        UserEntity firstUser = like1.getUser();
-
-        //Тут получаем Null, хотя выше видим, что у юзера есть лайк :((
-        List<LikeEntity> firstUserLikes = user1.getLikes();
+        List<LikeEntity> user1Likes = likeDao.showUsersWhoLikes(user2);
 
     }
 }

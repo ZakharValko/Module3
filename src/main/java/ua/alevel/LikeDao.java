@@ -2,6 +2,7 @@ package ua.alevel;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -35,19 +36,19 @@ public class LikeDao {
 
     }
 
-    public List<UserEntity> showUsersWhoLikes(UserEntity user){
-        List<LikeEntity> likes = user.getLikes();
-        System.out.println("Quantity of likes: " + likes.size());
+    public List<LikeEntity> showUsersWhoLikes(UserEntity user){
+        Query query = entityManager.createQuery("SELECT likes FROM UserEntity WHERE name = :userName");
+        query.setParameter("userName", user.getName());
+        List<LikeEntity> listOfLikes = query.getResultList();
+        System.out.println("Quantity of likes is: " + listOfLikes.size());
 
-        List<UserEntity> usersWhoLikes = null;
-        for (int i = 0; i < likes.size(); i++) {
-            usersWhoLikes.add(likes.get(i).getUser());
+        for (int i = 0; i < listOfLikes.size(); i++) {
+            int id = listOfLikes.get(i).getPhoto().getUserId();
+            Query query1 = entityManager.createQuery("SELECT name from UserEntity where id = :userId").setParameter("userId", id);
+            System.out.println(query1.getSingleResult());
         }
 
-        for (int i = 0; i < usersWhoLikes.size(); i++) {
-            System.out.println(usersWhoLikes.get(i));
-        }
-        return usersWhoLikes;
+        return listOfLikes;
     }
 
 }
